@@ -67,14 +67,24 @@ class SudokuSolver {
   }
 
   checkRowPlacement(puzzleString, row, column, value) {
+    if (!this.validate(puzzleString)) return false;
     if (!this.checkValidPlacement(puzzleString, row, column)) return false;
     if (this.checkSquarePlacement(puzzleString, row, column, value))
       return true;
     const square = this.getSquare(puzzleString, row, column);
-    return square == "." && !row.includes(value);
+    return square == "." && !this.getRow(puzzleString, row).includes(value);
   }
 
-  checkColPlacement(puzzleString, row, column, value) {}
+  checkColPlacement(puzzleString, row, column, value) {
+    if (!this.validate(puzzleString)) return false;
+    if (!this.checkValidPlacement(puzzleString, row, column)) return false;
+    if (this.checkSquarePlacement(puzzleString, row, column, value))
+      return true;
+    const square = this.getSquare(puzzleString, row, column);
+    return (
+      square == "." && !this.getColumn(puzzleString, column).includes(value)
+    );
+  }
 
   checkRegionPlacement(puzzleString, row, column, value) {}
 
