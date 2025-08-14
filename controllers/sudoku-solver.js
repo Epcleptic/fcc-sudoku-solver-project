@@ -5,37 +5,64 @@ class SudokuSolver {
   }
 
   // Helpers for getting parts of the puzzle
+  row_letters() {
+    return ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+  }
   getRow(puzzleString, row) {
-    let start = ["A", "B", "C", "D", "E", "F", "G", "H", "I"].indexOf(
-      row.toUpperCase()
-    );
-    if (start == -1) return;
+    row = row.toUpperCase();
+    if (!this.row_letters().includes(row)) return;
 
-    start *= 9;
+    const start = this.row_letters().indexOf(row) * 9;
     const end = start + 9;
     return puzzleString.slice(start, end);
   }
+  rows(puzzleString) {
+    return this.row_letters().map((letter) =>
+      this.getRow(puzzleString, letter)
+    );
+  }
 
-  getSquare(row, column) {
-    if (isNaN(column)) return;
+  column_numbers() {
+    return ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  }
+  getColumn(puzzleString, column) {
+    if (!this.column_numbers().includes(column)) return;
+    return this.row_letters(puzzleString).map((row) =>
+      this.getSquare(puzzleString, row, column)
+    );
+  }
+  columns(puzzleString) {
+    return this.column_numbers().map((number) =>
+      this.getColumn(puzzleString, number)
+    );
+  }
 
-    column = Number(column) - 1;
-    if (column < 0 || column > row.length) return;
+  getSquare(puzzleString, row, column) {
+    if (!this.row_letters().includes(row)) return;
+    if (!this.column_numbers().includes(column)) return;
 
-    return row[column];
+    row = this.getRow(puzzleString, row);
+    column = Number(column);
+    return row[column - 1];
+  }
+  squares(puzzleString) {
+    const result = [];
+    this.row_letters(puzzleString).forEach((row) => {
+      this.column_numbers().forEach((col) => {
+        result.push(this.getSquare(puzzleString, row, col));
+      });
+    });
+    return result;
   }
 
   // The check functions should be validating against the current state of the board.
   checkValidPlacement(puzzleString, row, column) {
-    row = this.getRow(puzzleString, row);
-    if (!row) return false;
-    const square = this.getSquare(row, column);
+    const square = this.getSquare(puzzleString, row, column);
     return !!square;
   }
 
   checkSquarePlacement(puzzleString, row, column, value) {
-    row = this.getRow(puzzleString, row);
-    const square = this.getSquare(row, column);
+    const square = this.getSquare(puzzleString, row, column);
     return square == value;
   }
 
@@ -43,8 +70,7 @@ class SudokuSolver {
     if (!this.checkValidPlacement(puzzleString, row, column)) return false;
     if (this.checkSquarePlacement(puzzleString, row, column, value))
       return true;
-    row = this.getRow(puzzleString, row);
-    const square = this.getSquare(row, column);
+    const square = this.getSquare(puzzleString, row, column);
     return square == "." && !row.includes(value);
   }
 
