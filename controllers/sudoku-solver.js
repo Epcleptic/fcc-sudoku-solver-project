@@ -4,7 +4,7 @@ class SudokuSolver {
     return !!puzzleString.match(/^[1-9.]{81}$/);
   }
 
-  // The check functions should be validating against the current state of the board.
+  // Helpers for getting parts of the puzzle
   getRow(puzzleString, row) {
     let start = ["A", "B", "C", "D", "E", "F", "G", "H", "I"].indexOf(
       row.toUpperCase()
@@ -25,13 +25,26 @@ class SudokuSolver {
     return row[column];
   }
 
-  checkRowPlacement(puzzleString, row, column, value) {
+  // The check functions should be validating against the current state of the board.
+  checkValidPlacement(puzzleString, row, column) {
     row = this.getRow(puzzleString, row);
     if (!row) return false;
-
     const square = this.getSquare(row, column);
-    if (!square) return false;
-    if (square == value) return true;
+    return !!square;
+  }
+
+  checkSquarePlacement(puzzleString, row, column, value) {
+    row = this.getRow(puzzleString, row);
+    const square = this.getSquare(row, column);
+    return square == value;
+  }
+
+  checkRowPlacement(puzzleString, row, column, value) {
+    if (!this.checkValidPlacement(puzzleString, row, column)) return false;
+    if (this.checkSquarePlacement(puzzleString, row, column, value))
+      return true;
+    row = this.getRow(puzzleString, row);
+    const square = this.getSquare(row, column);
     return square == "." && !row.includes(value);
   }
 
