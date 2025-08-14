@@ -127,7 +127,17 @@ class SudokuSolver {
     );
   }
 
-  checkRegionPlacement(puzzleString, row, column, value) {}
+  checkRegionPlacement(puzzleString, row, column, value) {
+    if (!this.validate(puzzleString)) return false;
+    if (!this.checkValidPlacement(puzzleString, row, column)) return false;
+    if (this.checkSquarePlacement(puzzleString, row, column, value))
+      return true;
+    const square = this.getSquare(puzzleString, row, column);
+    return (
+      square == "." &&
+      !this.getRegion(puzzleString, row, column).includes(value)
+    );
+  }
 
   // The solve function should handle solving any given valid puzzle string, not just the test inputs and solutions. You are expected to write out the logic to solve this.
   solve(puzzleString) {}

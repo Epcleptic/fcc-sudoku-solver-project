@@ -66,4 +66,24 @@ suite("Unit Tests", () => {
       )
     );
   });
+  test("Logic handles a valid region (3x3 grid) placement", function () {
+    assert.isTrue(
+      solver.checkColPlacement(
+        "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..",
+        "A",
+        "1",
+        "7"
+      )
+    );
+  });
+  test("Logic handles an invalid region (3x3 grid) placement", function () {
+    assert.isFalse(
+      solver.checkColPlacement(
+        "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..",
+        "A",
+        "1",
+        "1"
+      )
+    );
+  });
 });
