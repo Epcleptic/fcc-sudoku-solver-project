@@ -68,7 +68,7 @@ suite("Unit Tests", () => {
   });
   test("Logic handles a valid region (3x3 grid) placement", function () {
     assert.isTrue(
-      solver.checkColPlacement(
+      solver.checkRegionPlacement(
         "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..",
         "A",
         "1",
@@ -78,11 +78,25 @@ suite("Unit Tests", () => {
   });
   test("Logic handles an invalid region (3x3 grid) placement", function () {
     assert.isFalse(
-      solver.checkColPlacement(
+      solver.checkRegionPlacement(
         "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6..",
         "A",
         "1",
-        "1"
+        "2"
+      )
+    );
+  });
+  test("Valid puzzle strings pass the solver", function () {
+    assert.isTrue(
+      solver.checkValidBoard(
+        "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
+      )
+    );
+  });
+  test("Invalid puzzle strings fail the solver", function () {
+    assert.isFalse(
+      solver.checkValidBoard(
+        ".9...5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
       )
     );
   });

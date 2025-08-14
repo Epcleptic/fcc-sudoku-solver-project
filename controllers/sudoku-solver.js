@@ -32,9 +32,12 @@ class SudokuSolver {
   }
   getColumn(puzzleString, column) {
     if (!this.valid_col(column)) return;
-    return this.row_letters(puzzleString).map((row) =>
-      this.getSquare(puzzleString, row, column)
+
+    let result = "";
+    this.row_letters(puzzleString).forEach(
+      (row) => (result += this.getSquare(puzzleString, row, column))
     );
+    return result;
   }
   columns(puzzleString) {
     return this.column_numbers().map((number) =>
@@ -108,7 +111,6 @@ class SudokuSolver {
   }
 
   checkRowPlacement(puzzleString, row, column, value) {
-    if (!this.validate(puzzleString)) return false;
     if (!this.checkValidPlacement(puzzleString, row, column)) return false;
     if (this.checkSquarePlacement(puzzleString, row, column, value))
       return true;
@@ -117,7 +119,6 @@ class SudokuSolver {
   }
 
   checkColPlacement(puzzleString, row, column, value) {
-    if (!this.validate(puzzleString)) return false;
     if (!this.checkValidPlacement(puzzleString, row, column)) return false;
     if (this.checkSquarePlacement(puzzleString, row, column, value))
       return true;
@@ -128,7 +129,6 @@ class SudokuSolver {
   }
 
   checkRegionPlacement(puzzleString, row, column, value) {
-    if (!this.validate(puzzleString)) return false;
     if (!this.checkValidPlacement(puzzleString, row, column)) return false;
     if (this.checkSquarePlacement(puzzleString, row, column, value))
       return true;
@@ -137,6 +137,22 @@ class SudokuSolver {
       square == "." &&
       !this.getRegion(puzzleString, row, column).includes(value)
     );
+  }
+
+  checkUniqueValues(slice) {
+    const values = slice.split("").filter((val) => val != ".");
+    return new Set(values).size == values.length;
+  }
+  checkValidBoard(puzzleString) {
+    if (!this.validate(puzzleString)) return false;
+
+    const slices = this.rows(puzzleString)
+      .concat(this.columns(puzzleString))
+      .concat(this.regions(puzzleString));
+
+    return !slices.some((slice) => {
+      return !this.checkUniqueValues(slice);
+    });
   }
 
   // The solve function should handle solving any given valid puzzle string, not just the test inputs and solutions. You are expected to write out the logic to solve this.
