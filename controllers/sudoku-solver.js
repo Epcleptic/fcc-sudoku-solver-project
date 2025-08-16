@@ -139,10 +139,28 @@ class SudokuSolver {
     );
   }
 
-  checkUniqueValues(slice) {
-    const values = slice.split("").filter((val) => val != ".");
-    return new Set(values).size == values.length;
+  all_values() {
+    return ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   }
+  values(slice) {
+    return slice.split("").filter((val) => val != ".");
+  }
+  checkUniqueValues(slice) {
+    return new Set(this.values(slice)).size == this.values(slice).length;
+  }
+  difference(slice_1, slice_2) {
+    return slice_1.filter((val) => !slice_2.includes(val));
+  }
+  notUsedValues(puzzleString, row, column) {
+    return this.difference(
+      this.difference(
+        this.difference(this.all_values(), this.getRow(puzzleString, row)),
+        this.getColumn(puzzleString, column)
+      ),
+      this.getRegion(puzzleString, row, column)
+    );
+  }
+
   checkValidBoard(puzzleString) {
     if (!this.validate(puzzleString)) return false;
 
