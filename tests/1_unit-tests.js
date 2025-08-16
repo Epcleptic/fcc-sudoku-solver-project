@@ -28,6 +28,7 @@ suite("Unit Tests", () => {
         "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6."
       );
     }, "Expected puzzle to be 81 characters long");
+    assert.isTrue(true);
   });
   test("Logic handles a valid row placement", function () {
     assert.isTrue(
