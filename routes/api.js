@@ -9,8 +9,6 @@ module.exports = function (app) {
   app.route("/api/check").post((req, res) => {
     const puzzle = req.body.puzzle;
     const coordinate = req.body.coordinate;
-    const row = coordinate[0];
-    const column = coordinate.slice(1);
     const value = req.body.value;
 
     if (!puzzle || !coordinate || !value)
@@ -28,6 +26,8 @@ module.exports = function (app) {
     if (!solver.all_values().includes(value))
       return res.json({ error: "Invalid value" });
 
+    const row = coordinate[0];
+    const column = coordinate.slice(1);
     const rowValid = solver.checkRowPlacement(puzzle, row, column, value);
     const columnValid = solver.checkColPlacement(puzzle, row, column, value);
     const regionValid = solver.checkRegionPlacement(puzzle, row, column, value);
