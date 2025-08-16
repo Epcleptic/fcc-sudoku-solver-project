@@ -42,8 +42,6 @@ module.exports = function (app) {
       if (!regionValid) conflict.push("region");
       res.json({ valid: false, conflict: conflict });
     }
-
-    console.log(rowValid, columnValid, regionValid);
   });
 
   app.route("/api/solve").post((req, res) => {
