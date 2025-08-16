@@ -14,6 +14,9 @@ module.exports = function (app) {
     if (!puzzle || !coordinate || !value)
       return res.json({ error: "Required field(s) missing" });
 
+    const row = coordinate[0];
+    const column = coordinate.slice(1);
+
     try {
       solver.validate(puzzle);
     } catch (error) {
@@ -26,8 +29,6 @@ module.exports = function (app) {
     if (!solver.all_values().includes(value))
       return res.json({ error: "Invalid value" });
 
-    const row = coordinate[0];
-    const column = coordinate.slice(1);
     const rowValid = solver.checkRowPlacement(puzzle, row, column, value);
     const columnValid = solver.checkColPlacement(puzzle, row, column, value);
     const regionValid = solver.checkRegionPlacement(puzzle, row, column, value);
