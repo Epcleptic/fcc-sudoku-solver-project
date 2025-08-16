@@ -1,7 +1,11 @@
 class SudokuSolver {
   // The validate function should take a given puzzle string and check it to see if it has 81 valid characters for the input.
   validate(puzzleString) {
-    return !!puzzleString.match(/^[1-9.]{81}$/);
+    if (puzzleString.length != 81)
+      throw Error("Expected puzzle to be 81 characters long");
+
+    if (!puzzleString.match(/^[1-9.]{81}$/))
+      throw Error("Invalid characters in puzzle");
   }
 
   // Helpers for getting parts of the puzzle
@@ -172,8 +176,6 @@ class SudokuSolver {
   }
 
   checkValidBoard(puzzleString) {
-    if (!this.validate(puzzleString)) return false;
-
     const slices = this.rows(puzzleString)
       .concat(this.columns(puzzleString))
       .concat(this.regions(puzzleString));
@@ -184,11 +186,14 @@ class SudokuSolver {
   }
 
   // The solve function should handle solving any given valid puzzle string, not just the test inputs and solutions. You are expected to write out the logic to solve this.
-  solve(puzzleString, round = 0) {
+  solve(puzzleString) {
     const MAX_ROUNDS = 10;
 
-    if (!this.checkValidBoard(puzzleString)) return "Unsolvable";
-    if (round > MAX_ROUNDS) return "Unsolvable";
+    this.validate(puzzleString);
+    if (!this.checkValidBoard(puzzleString))
+      throw Error("Puzzle cannot be solved");
+
+    const old = puzzleString;
 
     this.row_letters().forEach((row) => {
       this.column_numbers().forEach((column) => {
@@ -202,8 +207,10 @@ class SudokuSolver {
       });
     });
 
+    if (old == puzzleString) throw Error("Puzzle cannot be solved");
+
     if (!puzzleString.includes(".")) return puzzleString;
-    return this.solve(puzzleString, round + 1);
+    return this.solve(puzzleString);
   }
 }
 

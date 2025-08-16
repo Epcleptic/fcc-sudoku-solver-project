@@ -6,25 +6,25 @@ let solver = new Solver();
 
 suite("Unit Tests", () => {
   test("Logic handles a valid puzzle string of 81 characters", function () {
-    assert.isTrue(
+    assert.doesNotThrow(() => {
       solver.validate(
         "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
-      )
-    );
+      );
+    });
   });
   test("Logic handles a puzzle string with invalid characters (not 1-9 or .)", function () {
-    assert.isFalse(
+    assert.throws(() => {
       solver.validate(
         "0.9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
-      )
-    );
+      );
+    }, "Invalid characters in puzzle");
   });
   test("Logic handles a puzzle string that is not 81 characters in length", function () {
-    assert.isFalse(
+    assert.throws(() => {
       solver.validate(
         "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6."
-      )
-    );
+      );
+    }, "Expected puzzle to be 81 characters long");
   });
   test("Logic handles a valid row placement", function () {
     assert.isTrue(
@@ -95,12 +95,11 @@ suite("Unit Tests", () => {
     );
   });
   test("Invalid puzzle strings fail the solver", function () {
-    assert.equal(
+    assert.throws(() => {
       solver.solve(
         ".9...5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
-      ),
-      "Unsolvable"
-    );
+      );
+    }, "Puzzle cannot be solved");
   });
   test("Solver returns the expected solution for an incomplete puzzle", function () {
     assert.equal(
