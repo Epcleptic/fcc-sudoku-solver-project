@@ -62,6 +62,16 @@ class SudokuSolver {
     });
     return result;
   }
+  setSquare(puzzleString, row, column, value) {
+    if (!this.valid_row(row)) return;
+    if (!this.valid_col(column)) return;
+
+    const rowIndex = this.row_letters().indexOf(row.toUpperCase()) * 9;
+    const colIndex = Number(column) - 1;
+    const index = rowIndex + colIndex;
+
+    return puzzleString.slice(0, index) + value + puzzleString.slice(index + 1);
+  }
 
   getRegionRows(row) {
     if (["A", "B", "C"].includes(row.toUpperCase())) return ["A", "B", "C"];
@@ -174,7 +184,27 @@ class SudokuSolver {
   }
 
   // The solve function should handle solving any given valid puzzle string, not just the test inputs and solutions. You are expected to write out the logic to solve this.
-  solve(puzzleString) {}
+  solve(puzzleString, round = 0) {
+    const MAX_ROUNDS = 10;
+
+    if (!this.checkValidBoard(puzzleString)) return "Unsolvable";
+    if (round > MAX_ROUNDS) return "Unsolvable";
+
+    this.row_letters().forEach((row) => {
+      this.column_numbers().forEach((column) => {
+        const square = this.getSquare(puzzleString, row, column);
+        if (square == ".") {
+          const values = this.notUsedValues(puzzleString, row, column);
+          if (values.length == 1) {
+            puzzleString = this.setSquare(puzzleString, row, column, values[0]);
+          }
+        }
+      });
+    });
+
+    if (!puzzleString.includes(".")) return puzzleString;
+    return this.solve(puzzleString, round + 1);
+  }
 }
 
 module.exports = SudokuSolver;

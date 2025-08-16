@@ -87,17 +87,27 @@ suite("Unit Tests", () => {
     );
   });
   test("Valid puzzle strings pass the solver", function () {
-    assert.isTrue(
-      solver.checkValidBoard(
+    assert.equal(
+      solver.solve(
         "..9..5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
-      )
+      ),
+      "769235418851496372432178956174569283395842761628713549283657194516924837947381625"
     );
   });
   test("Invalid puzzle strings fail the solver", function () {
-    assert.isFalse(
-      solver.checkValidBoard(
+    assert.equal(
+      solver.solve(
         ".9...5.1.85.4....2432......1...69.83.9.....6.62.71...9......1945....4.37.4.3..6.."
-      )
+      ),
+      "Unsolvable"
+    );
+  });
+  test("Solver returns the expected solution for an incomplete puzzle", function () {
+    assert.equal(
+      solver.solve(
+        "1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37."
+      ),
+      "135762984946381257728459613694517832812936745357824196473298561581673429269145378"
     );
   });
 });
